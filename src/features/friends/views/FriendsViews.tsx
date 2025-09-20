@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
 import { Button } from "../../_global/components/Button";
@@ -7,12 +7,12 @@ import { Input } from "../../_global/components/Input";
 import { InputLabel } from "../../_global/components/InputLabel";
 import { Poppins } from "../../_global/components/Text";
 import { convertQueryParamsToObject } from "../../_global/helper";
-import { useAblyConnection } from "../../_global/hooks/useAbblyConnection";
 import { useModal } from "../../_global/hooks/useModal";
 import { formatHourMinute } from "../../_global/lib/format-time";
 import { initial } from "../../_global/utils/initial";
 import { useFriend } from "../hooks/useFriend";
 import { useAddFriend } from "../hooks/useFriendCreation";
+import { useFriendSocket } from "../hooks/useFriendSocket";
 
 interface FriendProps {
   name: string;
@@ -93,8 +93,9 @@ export const FriendsViews = () => {
   const { closeModal, isOpen, openModal } = useModal();
   const mutation = useAddFriend();
   const [code, setCode] = useState("");
-  const { data: friends, refetch } = useFriend();
-
+  const { data: friendsData} = useFriend();
+  const { friends } = useFriendSocket(friendsData?.data || []);
+  console.log({ friends });
   const [searchParams, setSearchParams] = useSearchParams();
   const queries = convertQueryParamsToObject(searchParams.toString());
   const qs = (key: string) => searchParams.get(key);
@@ -109,10 +110,10 @@ export const FriendsViews = () => {
     mutation.mutate({ code });
   };
 
-  const { debugInfo } = useAblyConnection();
-  useEffect(() => {
-    refetch();
-  }, [debugInfo, refetch]);
+  // const { debugInfo } = useAblyConnection();
+  // useEffect(() => {
+  //   refetch();
+  // }, [debugInfo, refetch]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
       {/* Header */}
@@ -123,7 +124,7 @@ export const FriendsViews = () => {
               Friends
             </Poppins>
             <Poppins className="text-sm text-gray-500 mt-1">
-              {friends?.data?.length || 0} friends online
+              {friends?.length || 0} friends online
             </Poppins>
           </div>
         </div>
@@ -151,9 +152,7 @@ export const FriendsViews = () => {
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-3">
-                <Button onClick={openModal}>
-                  Add Friend
-                </Button>
+                <Button onClick={openModal}>Add Friend</Button>
               </div>
               <Input
                 value={qs("search") || ""}
@@ -168,8 +167,8 @@ export const FriendsViews = () => {
 
         {/* Friends List */}
         <div className="space-y-4">
-          {friends?.data && friends.data.length > 0 ? (
-            friends.data.map((item, index) => (
+          {friends && friends.length > 0 ? (
+            friends.map((item, index) => (
               <Friend
                 isOnline={item.isOnline}
                 name={item.name}

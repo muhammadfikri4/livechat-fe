@@ -6,12 +6,14 @@ import { VscSettings } from "react-icons/vsc";
 import { Navigate, Outlet } from "react-router-dom";
 import { CONFIG_APP } from "../../../core/configs/app";
 import { useFriend } from "../../friends/hooks/useFriend";
+import { useProfile } from "../../profile/hooks/useProfile";
 import { Sidebar } from "../components/Sidebar";
 import { storage } from "../helper/storage";
 import { useAblyConnection } from "../hooks/useAbblyConnection";
 
 export const RootViews = () => {
   // const ably = useAblyConnection()
+  const {data: profile} = useProfile()
   const token = storage.get(CONFIG_APP.TOKEN_KEY);
   if (!token) {
     return <Navigate to={"/login"} />;
@@ -41,11 +43,11 @@ export const RootViews = () => {
             to: "/profile",
           },
         ]}
-        name="Fikri Anto"
+        name={profile?.data?.name ?? ""}
       />
       <div className="pl-20">
         <Outlet />
-        <AblyDebugPanel />
+        {/* <AblyDebugPanel /> */}
       </div>
     </>
   );
