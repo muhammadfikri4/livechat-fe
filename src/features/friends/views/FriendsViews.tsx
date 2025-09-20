@@ -93,9 +93,9 @@ export const FriendsViews = () => {
   const { closeModal, isOpen, openModal } = useModal();
   const mutation = useAddFriend();
   const [code, setCode] = useState("");
-  const { data: friendsData} = useFriend();
+  const { data: friendsData } = useFriend();
   const { friends } = useFriendSocket(friendsData?.data || []);
-  console.log({ friends });
+  // console.log({ friends });
   const [searchParams, setSearchParams] = useSearchParams();
   const queries = convertQueryParamsToObject(searchParams.toString());
   const qs = (key: string) => searchParams.get(key);

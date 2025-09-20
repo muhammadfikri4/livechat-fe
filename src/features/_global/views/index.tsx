@@ -10,10 +10,13 @@ import { useProfile } from "../../profile/hooks/useProfile";
 import { Sidebar } from "../components/Sidebar";
 import { storage } from "../helper/storage";
 import { useAblyConnection } from "../hooks/useAbblyConnection";
+import { useSocket } from "../hooks/useSocket";
 
 export const RootViews = () => {
   // const ably = useAblyConnection()
-  const {data: profile} = useProfile()
+  const socket = useSocket();
+  socket?.id;
+  const { data: profile } = useProfile();
   const token = storage.get(CONFIG_APP.TOKEN_KEY);
   if (!token) {
     return <Navigate to={"/login"} />;
