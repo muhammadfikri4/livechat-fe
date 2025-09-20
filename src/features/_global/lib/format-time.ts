@@ -44,3 +44,10 @@ export function formatTime(date: Date, withTime: boolean = true): string {
     withTime ? `, ${hours}:${minutes}` : ""
   }`;
 }
+
+export function formatHourMinute(date: Date): string {
+  const minutes = new Date(date).getUTCMinutes().toString().padStart(2, "0");
+  const hours = new Date(date).getHours().toString().padStart(2, "0");
+
+  return `${hours}:${minutes}`
+}

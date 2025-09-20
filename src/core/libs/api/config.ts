@@ -27,8 +27,7 @@ async function createRequest<Res = unknown, Req = unknown>(
 ) {
   const defaultValue = { ...apiOption };
 
-  const token =
-    localStorage.getItem(CONFIG_APP.TOKEN_KEY) || "";
+  const token = localStorage.getItem(CONFIG_APP.TOKEN_KEY) || "";
   if (token) {
     defaultValue.bearerToken = token;
   }

@@ -4,9 +4,9 @@ export interface AddFriendDTO {
 
 export interface FriendDTO {
   id: string;
-  friend: {
-    id: string;
-    name: string;
-    description?: string;
-  };
+  name: string;
+  description?: string;
+  image?: string | null;
+  lastSeen?: Date
+  isOnline: boolean
 }
